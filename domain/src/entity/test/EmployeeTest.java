@@ -53,7 +53,7 @@ public class EmployeeTest {
         Person person = new Person(name, birthday);
         Employee employee = new Employee(person, salary, role);
 
-        String expectedString = name + " | " + birthday + " | " + salary + " | " + role.getDescription();
+        String expectedString = name + " | " + "01/01/1990" + " | " + salary + " | " + role.getDescription();
 
         assertEquals(expectedString, employee.toString());
     }

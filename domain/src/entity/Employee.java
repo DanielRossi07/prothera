@@ -30,7 +30,7 @@ public class Employee extends Person {
 
     public String toString(){
         return this.getName() + " | " +
-        this.getBirthday() + " | " +
+        this.getFormattedBirthday() + " | " +
         this.getSalary() + " | " +
         this.getRole();
     }

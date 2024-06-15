@@ -1,10 +1,11 @@
-package service;
+package service.test;
 
 import entity.Employee;
 import entity.Person;
 import enums.EmployeeRoles;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.EmployeeService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

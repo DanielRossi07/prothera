@@ -17,7 +17,7 @@ public class PersonTest {
         Person person = new Person(name, birthday);
 
         assertEquals(name, person.getName());
-        assertEquals(birthday, person.getBirthday());
+        assertEquals("01/01/1990", person.getFormattedBirthday());
     }
 
     @Test
