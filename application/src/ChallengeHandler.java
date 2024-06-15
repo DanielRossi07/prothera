@@ -1,7 +1,10 @@
 import entity.Employee;
+import entity.Person;
+import enums.EmployeeRoles;
 import service.EmployeeService;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,14 +14,12 @@ public class ChallengeHandler {
     private final BigDecimal MINIMUM_WAGE;
 
     public ChallengeHandler(){
-        this.employees = new ArrayList<Employee>() {};
         this.MINIMUM_WAGE = new BigDecimal("1212.00");
+        // 3.1
+        initializeEmployees();
     }
 
     public void execute(){
-        // 3.1
-        initializeEmployees();
-
         // 3.2
         removeEmployeeByName("João");
 
@@ -63,17 +64,38 @@ public class ChallengeHandler {
 
     public void initializeEmployees(){
         // TODO: Criar um arquivo json com todos os funcionários para funcionar como um banco de dados
-        Employee maria = new Employee("Maria", LocalDate.of(2000, 10, 18), new BigDecimal("2009.44"), "Operador");
-        Employee joao = new Employee("João", LocalDate.of(1990, 5, 12), new BigDecimal("2294.38"), "Operador");
-        Employee caio = new Employee("Caio", LocalDate.of(1961, 5, 2), new BigDecimal("9836.14"), "Cordenador");
-        Employee miguel = new Employee("Miguel", LocalDate.of(1988, 10, 14), new BigDecimal("19119.88"), "Diretor");
-        Employee alice = new Employee("Alice", LocalDate.of(1995, 1, 5), new BigDecimal("2234.68"), "Recepcionista");
-        Employee heitor = new Employee("Heitor", LocalDate.of(1991, 11, 19), new BigDecimal("1582.72"), "Operador");
-        Employee arthur = new Employee("Arthur", LocalDate.of(1993, 3, 31), new BigDecimal("4071.84"), "Contador");
-        Employee laura = new Employee("Laura", LocalDate.of(1994, 7, 8), new BigDecimal("3017.45"), "Gerente");
-        Employee heloisa = new Employee("Heloísa", LocalDate.of(2003, 5, 24), new BigDecimal("1606.85"), "Eletricista");
-        Employee helena = new Employee("Helena", LocalDate.of(1996, 9, 2), new BigDecimal("2799.93"), "Gerente");
-        this.employees = new ArrayList<Employee>(Arrays.asList(maria, joao, caio, miguel, alice, heitor, arthur, laura, heloisa, helena));
+        Person mariaPerson = new Person("Maria", LocalDate.of(2000, 10, 18));
+        Employee mariaEmployee = new Employee(mariaPerson, new BigDecimal("2009.44"), EmployeeRoles.OPERADOR);
+
+        Person joaoPerson = new Person("João", LocalDate.of(1990, 5, 12));
+        Employee joaoEmployee = new Employee(joaoPerson, new BigDecimal("2294.38"), EmployeeRoles.OPERADOR);
+
+        Person caioPerson = new Person("Caio", LocalDate.of(1961, 5, 2));
+        Employee caioEmployee = new Employee(caioPerson, new BigDecimal("9836.14"), EmployeeRoles.COORDENADOR);
+
+        Person miguelPerson = new Person("Miguel", LocalDate.of(1988, 10, 14));
+        Employee miguelEmployee = new Employee(miguelPerson, new BigDecimal("19119.88"), EmployeeRoles.DIRETOR);
+
+        Person alicePerson = new Person("Alice", LocalDate.of(1995, 1, 5));
+        Employee aliceEmployee = new Employee(alicePerson, new BigDecimal("2234.68"), EmployeeRoles.RECEPCIONISTA);
+
+        Person heitorPerson = new Person("Heitor", LocalDate.of(1991, 11, 19));
+        Employee heitorEmployee = new Employee(heitorPerson, new BigDecimal("1582.72"), EmployeeRoles.OPERADOR);
+
+        Person arthurPerson = new Person("Arthur", LocalDate.of(1993, 3, 31));
+        Employee arthurEmployee = new Employee(arthurPerson, new BigDecimal("4071.84"), EmployeeRoles.CONTADOR);
+
+        Person lauraPerson = new Person("Laura", LocalDate.of(1994, 7, 8));
+        Employee lauraEmployee = new Employee(lauraPerson, new BigDecimal("3017.45"), EmployeeRoles.GERENTE);
+
+        Person heloisaPerson = new Person("Heloísa", LocalDate.of(2003, 5, 24));
+        Employee heloisaEmployee = new Employee(heloisaPerson, new BigDecimal("1606.85"), EmployeeRoles.ELETRICISTA);
+
+        Person helenaPerson = new Person("Helena", LocalDate.of(1996, 9, 2));
+        Employee helenaEmployee = new Employee(helenaPerson, new BigDecimal("2799.93"), EmployeeRoles.GERENTE);
+
+        this.employees = new ArrayList<>(List.of(mariaEmployee, joaoEmployee, caioEmployee, miguelEmployee,
+                aliceEmployee, heitorEmployee, arthurEmployee, lauraEmployee, heloisaEmployee, helenaEmployee));
     }
 
     public void removeEmployeeByName(String employeeName){
@@ -90,17 +112,19 @@ public class ChallengeHandler {
                 .toList();
     }
 
-    public List<Employee> getOrderedEmployeesByName(){
-        List<Employee> employeesOrderedAlphabetically = this.employees;
+    public List<Employee> getOrderedEmployeesByName() {
+        List<Employee> employeesOrderedAlphabetically = new ArrayList<>(this.employees);
         employeesOrderedAlphabetically.sort(Comparator.comparing(Employee::getName));
         return employeesOrderedAlphabetically;
     }
 
+    public BigDecimal calculateHowManyMinimumWagesEmployeeMakes(Employee employee){
+        return employee.getSalary().divide(MINIMUM_WAGE, RoundingMode.HALF_UP);
+    }
+
     public static void printEmployeesInformation(List<Employee> employees){
         System.out.println("Nome | Data de nascimento | Salário | Função");
-        employees.forEach(employee -> {
-            System.out.println(employee.toString());
-        });
+        employees.forEach(System.out::println);
     }
 
     public static void printEmployeeGroups(Map<String, List<Employee>> groupedEmployeesByRole){
@@ -115,9 +139,10 @@ public class ChallengeHandler {
         System.out.println(employee.getName() + " " + employee.getAge());
     }
 
-    public static void printHowManyMinimumWagesEachEmployeeMakes (List<Employee> employees, BigDecimal minimumWage) {
+    public void printHowManyMinimumWagesEachEmployeeMakes (List<Employee> employees, BigDecimal minimumWage) {
+        System.out.println("Nome | Salários mínimos");
         employees.forEach(employee -> {
-            System.out.println(employee.getName() + " ganha " + employee.calculateHowManyMinimumWagesEmployeeMakes(minimumWage) + " salários mínimos");
+            System.out.println(employee.getName() + " " + calculateHowManyMinimumWagesEmployeeMakes(employee));
         });
     }
 }

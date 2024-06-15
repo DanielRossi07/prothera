@@ -1,15 +1,16 @@
 package entity;
 
+import enums.EmployeeRoles;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 
 public class Employee extends Person {
     private BigDecimal salary;
-    private String role;
+    private EmployeeRoles role;
 
-    public Employee(String name, LocalDate birthday, BigDecimal salary, String role) {
-        super(name, birthday);
+    public Employee(Person person, BigDecimal salary, EmployeeRoles role){
+        super(person.getName(), person.getBirthday());
         this.salary = salary;
         this.role = role;
     }
@@ -19,16 +20,12 @@ public class Employee extends Person {
     }
 
     public String getRole() {
-        return role;
+        return role.getDescription();
     }
 
     public void increaseSalary(BigDecimal percentageToIncrease) {
         BigDecimal increase = salary.multiply(percentageToIncrease).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
         this.salary = this.salary.add(increase);
-    }
-
-    public BigDecimal calculateHowManyMinimumWagesEmployeeMakes(BigDecimal minimumWage){
-        return salary.divide(minimumWage, RoundingMode.HALF_UP);
     }
 
     public String toString(){
